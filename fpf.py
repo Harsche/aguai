@@ -13,6 +13,7 @@ from athlete import Athlete
 
 import docs
 import PySimpleGUI as sg
+import web_methods as wm
 import unicodedata
 import pyautogui
 import config
@@ -28,12 +29,19 @@ data: dict
 
 
 def log_in():
+    if data[config.DATA_LOGIN_FPF_KEY] == '' or data[config.DATA_PASSWORD_FPF_KEY] == '':
+        return
+
     global web
     global tab
     if not tab:
         web.switch_to.new_window('tab')
         tab = web.current_window_handle
+    else:
+        web.switch_to.window(tab)
 
     if web.current_url != config.FPF_LOGIN_URL:
         web.get(config.FPF_LOGIN_URL)
+
+
 
