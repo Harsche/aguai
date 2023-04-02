@@ -22,6 +22,7 @@ import time
 import os
 
 web: WebDriver
+current_athlete: Athlete
 tab: str
 data: dict
 

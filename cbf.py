@@ -4,6 +4,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.remote.webdriver import WebDriver
 from subprocess import CREATE_NO_WINDOW
 from unidecode import unidecode
 from main import get_doc_extension
@@ -16,10 +17,13 @@ import config
 import time
 import os
 
+web: WebDriver
 current_athlete: Athlete
+tab: str
 data: dict
 
-def log_in_cbf():
+
+def log_in():
     if data[config.DATA_LOGIN_CBF_KEY] == '' or data[config.DATA_PASSWORD_CBF_KEY] == '':
         return
 
@@ -30,8 +34,8 @@ def log_in_cbf():
     global web
     web = webdriver.Chrome(service=service, options=options)
     web.get(config.CBF_LOGIN_URL)
-    global cbf_tab
-    cbf_tab = web.current_window_handle
+    global tab
+    tab = web.current_window_handle
 
     time.sleep(2)
 
@@ -162,14 +166,7 @@ def set_athlete_guardian():
         print('O atleta é maior de idade.')
         return
 
-    web.get(config.ATHLETE_LIST_URL)
-    time.sleep(2)
-
-    # SEARCHING FOR ATHLETE
-    wm.select_dropdown_option(config.CODE_DROPDOWN_XPATH, 'CPF')
-    wm.fill_field(config.CPF_SEARCH_FIELD_XPATH, current_athlete.cpf)
-    wm.click_button(config.SEARCH_BUTTON_XPATH)
-    time.sleep(3)
+    search_athlete()
 
     wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
     wm.click_button(config.EDIT_GUARDIAN_BUTTON_XPATH)
@@ -206,18 +203,11 @@ def generate_ticket():
 
 def generate_contract():
     if web.current_url != config.ATHLETE_CONTRACT_URL:
-        web.get(config.ATHLETE_LIST_URL)
-        time.sleep(2)
+        search_athlete()
 
-        # SEARCHING FOR ATHLETE
-        wm.select_dropdown_option(config.CODE_DROPDOWN_XPATH, 'CPF')
-        wm.fill_field(config.CPF_SEARCH_FIELD_XPATH, current_athlete.cpf)
-        wm.click_button(config.SEARCH_BUTTON_XPATH)
-        time.sleep(3)
-
-        wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
-        wm.click_button(config.EDIT_CONTRACT_BUTTON_XPATH)
-        time.sleep(2)
+    wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
+    wm.click_button(config.EDIT_CONTRACT_BUTTON_XPATH)
+    time.sleep(2)
 
     # GENERATING CONTRACT
     wm.click_button(config.CONTRACT_NEW_BUTTON)

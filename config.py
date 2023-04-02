@@ -96,6 +96,8 @@ ATHLETE_CONTRACT_URL = 'https://gestaoweb.cbf.com.br/site/registro/atleta/contra
 
 # URLs FPF
 FPF_LOGIN_URL = 'https://portaldoclube.fpf.org.br/'
+FPF_NEW_ATHLETE_URL = 'https://extranetclube.fpf.org.br/NovoAtleta.aspx'
+FPF_ATHLETE_REGISTER_URL = 'https://extranetclube.fpf.org.br/RegistroAtleta.aspx'
 
 # Login Xpaths
 FPF_LOGIN_PATH = '//*[@id="email"]'
