@@ -25,7 +25,7 @@ import os
 
 athletes: [Athlete] = []
 current_athlete: Athlete
-web: WebDriver
+web: WebDriver = None
 cbf_tab = None
 window: sg.Window = None
 endProgram = False
@@ -61,30 +61,66 @@ def save_data():
     with open('data.json', 'w') as dt:
         json.dump(data, dt)
 
+
 def start_ui():
     form_paths = data[config.DATA_FORMS_KEY]
     docs_paths = data[config.DATA_DOCS_KEY]
 
     configs = [
+        [sg.VStretch()],
         [
+            sg.Push(),
             sg.Text(text='Formulário:', size=10),
             sg.Input(enable_events=True, key='-FORM_PATH-', default_text=form_paths),
-            sg.FileBrowse('Procurar...', file_types=(('CSV', '.csv'),))
+            sg.FileBrowse('Procurar...', file_types=(('CSV', '.csv'),)),
+            sg.Push()
         ],
         [
+            sg.Push(),
             sg.Text(text='Documentos:', size=10),
             sg.Input(enable_events=True, key='-DOCS_PATH-', default_text=docs_paths),
-            sg.FolderBrowse('Procurar...')
+            sg.FolderBrowse('Procurar...'),
+            sg.Push()
         ],
         [
-            sg.Text(text='Login CBF:', size=10),
-            sg.Input(enable_events=True, key='-LOGIN_CBF-', default_text=data.get(config.DATA_LOGIN_CBF_KEY))
+            sg.HSeparator(pad=((10, 10), (20, 20)))
         ],
         [
-            sg.Text(text='Senha CBF:', size=10),
-            sg.Input(enable_events=True, key='-PASSWORD_CBF-', default_text=data.get(config.DATA_PASSWORD_CBF_KEY))
+            sg.Column(
+                [
+                    [
+                        sg.Text(text='Login CBF:', size=9),
+                        sg.Input(enable_events=True, key='-LOGIN_CBF-',
+                                 default_text=data.get(config.DATA_LOGIN_CBF_KEY),
+                                 size=25)
+                    ],
+                    [
+                        sg.Text(text='Senha CBF:', size=9),
+                        sg.Input(enable_events=True, key='-PASSWORD_CBF-',
+                                 default_text=data.get(config.DATA_PASSWORD_CBF_KEY),
+                                 size=25)
+                    ],
+                ]
+            ),
+            sg.VSeparator(),
+            sg.Column(
+                [
+                    [
+                        sg.Text(text='Login FPF:', size=9),
+                        sg.Input(enable_events=True, key='-LOGIN_FPF-',
+                                 default_text=data.get(config.DATA_LOGIN_FPF_KEY),
+                                 size=25)
+                    ],
+                    [
+                        sg.Text(text='Senha FPF:', size=9),
+                        sg.Input(enable_events=True, key='-PASSWORD_FPF-',
+                                 default_text=data.get(config.DATA_PASSWORD_FPF_KEY),
+                                 size=25)
+                    ],
+                ]
+            ),
         ],
-        sg.HSeparator(),
+        [sg.VStretch()]
     ]
 
     athlete_info_column = [
@@ -126,8 +162,16 @@ def start_ui():
         ]
     ]
 
-    command_list_column = [
+    cbf_command_list = [
         [sg.Button(button_text='CBF', key='-CBF-', enable_events=True)],
+        [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
+        [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
+        [sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True)],
+        [sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True)],
+        [sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True)]
+    ]
+
+    fpf_command_list = [
         [sg.Button(button_text='FPF', key='-FPF-', enable_events=True)],
         [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
         [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
@@ -138,12 +182,16 @@ def start_ui():
 
     layout = [
         [
-            configs,
-            sg.Column(athlete_info_column),
-            sg.VSeparator(),
-            sg.Column(command_list_column)
+            sg.TabGroup([
+                [
+                    sg.Tab('Atletas',
+                           [[sg.Column(athlete_info_column), sg.VSeparator(), sg.Column(cbf_command_list)]]),
+                    sg.Tab('Configurações', configs)
+                ]
+            ], tab_background_color='#516173')
         ]
     ]
+
     global window
     window = sg.Window(title="Dados do Atleta - Aguaí", layout=layout, icon=config.ICON_BASE64)
 
@@ -162,6 +210,11 @@ def manage_event(event_name: str, values: dict):
         img = Image.open(current_athlete.doc_photo + '.jpg')
         img.thumbnail((200, 200), Image.LANCZOS)
         window['-ATHLETE_PHOTO-'].update(data=ImageTk.PhotoImage(img))
+        return
+
+    if event_name == '-MENU-':
+        window.layout()
+
         return
 
     if event_name == '-REGISTER-':
@@ -223,6 +276,16 @@ def manage_event(event_name: str, values: dict):
 
     if event_name == '-PASSWORD_CBF-':
         data[config.DATA_PASSWORD_CBF_KEY] = values['-PASSWORD_CBF-']
+        save_data()
+        return
+
+    if event_name == '-LOGIN_FPF-':
+        data[config.DATA_LOGIN_FPF_KEY] = values['-LOGIN_FPF-']
+        save_data()
+        return
+
+    if event_name == '-PASSWORD_FPF-':
+        data[config.DATA_PASSWORD_FPF_KEY] = values['-PASSWORD_FPF-']
         save_data()
         return
 
@@ -306,21 +369,6 @@ def set_current_athlete(name: str):
         print("Could not find athlete.")
 
 
-def get_doc_extension(path):
-    pdf_path = path + '.pdf'
-    if os.path.isfile(pdf_path):
-        return pdf_path
-    jpg_path = path + '.jpg'
-    if os.path.isfile(jpg_path):
-        return jpg_path
-    jpeg_path = path + '.jpeg'
-    if os.path.isfile(jpeg_path):
-        return jpeg_path
-    png_path = path + '.png'
-    if os.path.isfile(png_path):
-        return png_path
-
-
 def most_similar_string(strings, word):
     # Normalize the word by removing accents
     word_normalized = unicodedata.normalize('NFD', word).encode('ascii', 'ignore').decode('utf-8').lower()
@@ -400,4 +448,5 @@ if __name__ == '__main__':
         manage_event(event, values)
 
     window.close()
-    web.quit()
+    if web is not None:
+        web.quit()

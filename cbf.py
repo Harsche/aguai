@@ -7,7 +7,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webdriver import WebDriver
 from subprocess import CREATE_NO_WINDOW
 from unidecode import unidecode
-from main import get_doc_extension
 import web_methods as wm
 from athlete import Athlete
 
@@ -127,7 +126,7 @@ def update_athlete():
         doc_name = wm.get_text(config.EDIT_SELECT_DOC_TYPE_XPATH.replace('index', str(i)))
         doc_type = docs.get_doc_type(doc_name)
         wm.click_button(config.EDIT_SELECT_DOC_BUTTON_XPATH.replace('index', str(i)))
-        doc_name = get_doc_extension(current_athlete.get_doc_path(doc_type))
+        doc_name = docs.get_doc_extension(current_athlete.get_doc_path(doc_type))
         if not os.path.isfile(doc_name):
             print(f'File is missing: {doc_name}')
             return
@@ -177,7 +176,7 @@ def set_athlete_guardian():
     wm.click_button(config.GUARDIAN_CPF_SEARCH_BUTTON)
     wm.fill_field(config.GUARDIAN_IS_PARENT_DROPDOWN, 'Sim')
     wm.fill_field(config.GUARDIAN_ACTIVE_DROPDOWN, 'Sim')
-    wm.send_file_to_field(config.GUARDIAN_DOC_FILE_FIELD, get_doc_extension(current_athlete.doc_guardianCpf))
+    wm.send_file_to_field(config.GUARDIAN_DOC_FILE_FIELD, docs.get_doc_extension(current_athlete.doc_guardianCpf))
     time.sleep(1)
     wm.click_button(config.GUARDIAN_SAVE_BUTTON)
 

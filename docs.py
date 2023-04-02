@@ -60,3 +60,18 @@ def get_doc_type(doc_requested):
     if doc_requested == 'Certificado de Reservista':
         return DocTypes.Military_Service
     return None
+
+
+def get_doc_extension(path):
+    pdf_path = path + '.pdf'
+    if os.path.isfile(pdf_path):
+        return pdf_path
+    jpg_path = path + '.jpg'
+    if os.path.isfile(jpg_path):
+        return jpg_path
+    jpeg_path = path + '.jpeg'
+    if os.path.isfile(jpeg_path):
+        return jpeg_path
+    png_path = path + '.png'
+    if os.path.isfile(png_path):
+        return png_path
