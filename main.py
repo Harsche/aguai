@@ -56,6 +56,8 @@ def get_data():
         with open('data.json', 'r') as dt:
             data = json.load(dt)
 
+    cbf.data = data
+    fpf.data = data
 
 def save_data():
     with open('data.json', 'w') as dt:
@@ -164,6 +166,7 @@ def start_ui():
 
     cbf_command_list = [
         [sg.Button(button_text='CBF', key='-CBF-', enable_events=True)],
+        [sg.Button(button_text='FPF', key='-FPF-', enable_events=True)],
         [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
         [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
         [sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True)],
@@ -193,7 +196,10 @@ def start_ui():
     ]
 
     global window
-    window = sg.Window(title="Dados do Atleta - Aguaí", layout=layout, icon=config.ICON_BASE64)
+    with open('icon.txt', 'r') as dt:
+        icon = dt.read()
+        icon = bytes(icon, 'ascii')
+    window = sg.Window(title="Dados do Atleta - Aguaí", layout=layout, icon=icon)
 
 
 def manage_event(event_name: str, values: dict):
@@ -432,6 +438,8 @@ def get_athlete_data():
         new_athlete = Athlete(row, data)
         athletes.append(new_athlete)
         names.append(new_athlete.name)
+
+    names.sort()
 
     if window:
         window['-GET_ATHLETE_DATA-'].update(values=names)

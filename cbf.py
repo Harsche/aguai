@@ -19,7 +19,7 @@ import os
 web: WebDriver
 current_athlete: Athlete
 tab: str
-data: dict
+# data: dict
 
 
 def log_in():

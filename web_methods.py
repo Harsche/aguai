@@ -7,6 +7,7 @@ from main import most_similar_string
 
 web: WebDriver
 
+
 def fill_field(xpath, info):
     try:
         field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
@@ -84,3 +85,18 @@ def select_dropdown_option_by_index(xpath, index):
     else:
         select = Select(dropdown)
         select.select_by_index(index)
+
+
+def wait_for_element(xpath, max_time):
+    try:
+        element = WebDriverWait(web, max_time).until(lambda x: x.find_element(By.XPATH, xpath))
+    except TimeoutException:
+        print('COULD NOT FIND ELEMENT IN TIME')
+    return element
+
+
+def change_to_tab(tab):
+    for tab_handle in web.window_handles:
+        if tab_handle == tab:
+            web.switch_to.window(tab_handle)
+            break
