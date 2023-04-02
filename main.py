@@ -9,6 +9,8 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from subprocess import CREATE_NO_WINDOW
 from unidecode import unidecode
 from PIL import Image, ImageTk
+
+import web_methods
 from athlete import Athlete
 
 import docs
@@ -38,6 +40,21 @@ def setup():
     get_athlete_data()
     athletes.sort(key=lambda athlete: athlete.name)
     start_ui()
+
+
+def start_web():
+    global web
+    if web is not None:
+        return
+
+    options = Options()
+    # options.set_preference('profile', config.FIREFOX_PROFILE_PATH)
+    service = Service(config.GECKODRIVER_PATH)
+    service.creation_flags = CREATE_NO_WINDOW
+    web = webdriver.Chrome(service=service, options=options)
+    cbf.web = web
+    fpf.web = web
+    web_methods.web = web
 
 
 def get_data():
@@ -167,6 +184,10 @@ def start_ui():
     cbf_command_list = [
         [sg.Button(button_text='CBF', key='-CBF-', enable_events=True)],
         [sg.Button(button_text='FPF', key='-FPF-', enable_events=True)],
+        [sg.Button(button_text='FPF Registrar', key='-FPF_REGISTER-', enable_events=True)],
+        [sg.Button(button_text='FPF Documentos', key='-FPF_DOCS-', enable_events=True)],
+        [sg.Button(button_text='FPF Contrato', key='-FPF_CONTRACT-', enable_events=True)],
+        [sg.Button(button_text='FPF Formulário', key='-FPF_FORM-', enable_events=True)],
         [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
         [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
         [sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True)],
@@ -295,18 +316,35 @@ def manage_event(event_name: str, values: dict):
         save_data()
         return
 
+    if event_name == '-FPF_REGISTER-':
+        fpf.register_athlete()
+        return
+
+    if event_name == '-FPF_DOCS-':
+        fpf.add_docs()
+        return
+
+    if event_name == '-FPF_CONTRACT-':
+        fpf.generate_contract()
+        return
+
+    if event_name == '-FPF_FORM-':
+        fpf.generate_form()
+        return
+
     if event_name == '-CBF-':
         try:
+            start_web()
             cbf.log_in()
         except:
             return
 
     if event_name == '-FPF-':
-        try:
-            fpf.web = web
-            fpf.log_in()
-        except:
-            return
+        # try:
+        start_web()
+        fpf.log_in()
+        # except:
+        return
 
 
 def fill_field(xpath, info):
@@ -370,6 +408,8 @@ def set_current_athlete(name: str):
         if athlete.name == name:
             global current_athlete
             current_athlete = athlete
+            fpf.current_athlete = current_athlete
+            cbf.current_athlete = current_athlete
             found = True
     if not found:
         print("Could not find athlete.")

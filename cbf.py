@@ -18,22 +18,16 @@ import os
 
 web: WebDriver
 current_athlete: Athlete
-tab: str
-# data: dict
+tab: str = 'l'
+data: dict
 
 
 def log_in():
     if data[config.DATA_LOGIN_CBF_KEY] == '' or data[config.DATA_PASSWORD_CBF_KEY] == '':
         return
 
-    options = Options()
-    # options.set_preference('profile', config.FIREFOX_PROFILE_PATH)
-    service = Service(config.GECKODRIVER_PATH)
-    service.creation_flags = CREATE_NO_WINDOW
-    global web
-    web = webdriver.Chrome(service=service, options=options)
+    global web, tab
     web.get(config.CBF_LOGIN_URL)
-    global tab
     tab = web.current_window_handle
 
     time.sleep(2)

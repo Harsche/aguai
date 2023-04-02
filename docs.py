@@ -13,6 +13,7 @@ class DocTypes(Enum):
     Scholarship = 6
     Guardian_CPF = 7
     Military_Service = 8
+    Medical_Exam = 9
 
 
 docs_subfolder = {
@@ -23,7 +24,8 @@ docs_subfolder = {
     DocTypes.Birthday_Certificate: 'Certidão de nascimento (File responses)',
     DocTypes.Residence_Certificate: 'Comprovante de residência  (File responses)',
     DocTypes.Guardian_CPF: 'Documento de identidade (File responses)',
-    DocTypes.Military_Service: 'Situação de serviço militar (File responses)'
+    DocTypes.Military_Service: 'Situação de serviço militar (File responses)',
+    DocTypes.Medical_Exam: 'Atestado médico (File responses)'
 }
 
 docs_suffix = {
@@ -34,7 +36,8 @@ docs_suffix = {
     DocTypes.Birthday_Certificate: 'Certidão de nascimento',
     DocTypes.Residence_Certificate: 'Comprovante de residência_',
     DocTypes.Guardian_CPF: 'Documento de identidade',
-    DocTypes.Military_Service: 'Situação de serviço militar'
+    DocTypes.Military_Service: 'Situação de serviço militar',
+    DocTypes.Medical_Exam: 'Atestado médico'
 }
 
 
@@ -59,6 +62,8 @@ def get_doc_type(doc_requested):
         return DocTypes.Scholarship
     if doc_requested == 'Certificado de Reservista':
         return DocTypes.Military_Service
+    if doc_requested == 'Atestado Médico':
+        return DocTypes.Medical_Exam
     return None
 
 

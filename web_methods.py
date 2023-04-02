@@ -90,9 +90,10 @@ def select_dropdown_option_by_index(xpath, index):
 def wait_for_element(xpath, max_time):
     try:
         element = WebDriverWait(web, max_time).until(lambda x: x.find_element(By.XPATH, xpath))
+        return element
     except TimeoutException:
         print('COULD NOT FIND ELEMENT IN TIME')
-    return element
+
 
 
 def change_to_tab(tab):

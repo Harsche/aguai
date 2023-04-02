@@ -92,7 +92,7 @@ ATHLETE_CONTRACT_URL = 'https://gestaoweb.cbf.com.br/site/registro/atleta/contra
 # endregion
 
 
-# region Description
+# region FPF
 
 # URLs FPF
 FPF_LOGIN_URL = 'https://portaldoclube.fpf.org.br/'
@@ -106,6 +106,8 @@ FPF_LOGIN_BUTTON_PATH = '//*[@id="btnLogin"]'
 
 # New Athlete
 FPF_HOMEPAGE = '/html/body/div[3]/ul/li[1]'
+FPF_AUTH_DROPDOWN = '/html/body/div[3]/ul/li[3]/a'
+FPF_AUTH_REGISTER = '/html/body/div[3]/ul/li[3]/ul/li[3]/a'
 
 FPF_NEW_ATHLETE_BUTTON = '//*[@id="__tab_TabContainer1_TabPanel1"]'
 FPF_NEW_ATHLETE_CPF_INPUT_FIELD = '//*[@id="TabContainer1_TabPanel1_txtCpf"]'
@@ -167,12 +169,14 @@ FPF_ADDRESS_SEND_BUTTON = '//*[@id="btEnviarFotoCompEndereco"]'
 FPF_CONTRACT_CPF_INPUT_FIELD = '//*[@id="txtCpf"]'
 FPF_CONTRACT_CPF_SEARCH_BUTTON = '//*[@id="btBuscaAtleta"]'
 FPF_CONTRACT_TYPE_DROPDOWN = '//*[@id="DropDownListTipoNome"]'
-# Inscrição Atleta Amador
 FPF_CONTRACT_SEND_BUTTON = '//*[@id="btEnviar"]'
 FPF_CONTRACT_FINALIZE_BUTTON = '//*[@id="btFinalizarProcesso"]'
+FPF_CONTRACT_FINALIZE_CONFIRM = '//*[@id="lblFinalizarInfo"]'
 
 # Doctor
 
+FPF_FORM_SELECT_ATHLETE = '/html/body/form/div[9]/div[1]/div[1]/div[1]/div[5]/div/div/table/tbody/tr[2]/td[8]/a/img'
+FPF_FORM_EDIT = '/html/body/form/div[9]/div/div[1]/div[1]/div[2]/div/div[1]/table/tbody/tr[2]/td[4]/input'
 FPF_DOCTOR_NAME_INPUT_FIELD = '//*[@id="txtNomeMedico"]'
 FPF_DOCTOR_CRM_INPUT_FIELD = '//*[@id="txtCrmMedico"]'
 FPF_DOCTOR_CPF_INPUT_FIELD = '//*[@id="txtCpfMedico"]'

@@ -19,7 +19,7 @@ class Athlete:
         self.scholarship: str = athlete_dict['Grau de instrução ']
         self.countryBorn: str = athlete_dict['País de origem']
         self.stateBorn: str = athlete_dict['UF de Naturalidade']
-        self.cityBorn: str = athlete_dict['Cidade de Naturalidade']
+        self.cityBorn: str = str(athlete_dict['Cidade de Naturalidade']).strip()
         self.guardianName: str = athlete_dict['Nome completo do responsável']
         self.guardianPhone: str = athlete_dict['Telefone de contato do responsável']
         self.guardianCpf: str = athlete_dict['CPF.1']
@@ -33,13 +33,14 @@ class Athlete:
         self.doc_birthCertificate = docs.get_doc_path(DocTypes.Birthday_Certificate, self, data)
         self.doc_residenceCertificate_ = docs.get_doc_path(DocTypes.Residence_Certificate, self, data)
         self.doc_militaryService = docs.get_doc_path(DocTypes.Military_Service, self, data)
+        self.doc_medicalExam = docs.get_doc_path(DocTypes.Medical_Exam, self, data)
         self.cep: str = athlete_dict['CEP']
         self.addressStreet: str = athlete_dict['Nome da rua']
         self.addressNum: str = athlete_dict['Número']
         self.addressComplement: str = athlete_dict['Complemento']
         self.addressNeighbourhood: str = athlete_dict['Bairro']
         self.addressState: str = athlete_dict['UF']
-        self.addressCity: str = athlete_dict['Cidade']
+        self.addressCity: str = str(athlete_dict['Cidade']).strip()
 
     def get_doc_path(self, doc_type):
         if doc_type == DocTypes.CPF:
@@ -58,4 +59,6 @@ class Athlete:
             return self.doc_guardianCpf
         if doc_type == DocTypes.Military_Service:
             return self.doc_militaryService
+        if doc_type == DocTypes.Medical_Exam:
+            return self.doc_medicalExam
         return None
