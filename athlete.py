@@ -12,7 +12,7 @@ class Athlete:
         self.birthday: str = athlete_dict['Data de nascimento']
         self.isMinor = athlete_dict['Menor de idade'] == 'Sim'
         self.gender: str = athlete_dict['Sexo biológico']
-        self.cpf: str = athlete_dict['CPF'].strip()
+        self.cpf: str = str(athlete_dict['CPF']).strip().zfill(11)
         self.rg: str = str(athlete_dict['RG.1']) .strip()
         self.email: str = athlete_dict['Email'].strip()
         self.civilState: str = athlete_dict['Estado civil']

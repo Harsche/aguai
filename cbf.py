@@ -18,7 +18,7 @@ import os
 
 web: WebDriver
 current_athlete: Athlete
-tab: str = 'l'
+tab: str = ''
 data: dict
 
 
@@ -27,8 +27,12 @@ def log_in():
         return
 
     global web, tab
-    web.get(config.CBF_LOGIN_URL)
-    tab = web.current_window_handle
+    if not tab:
+        web.get(config.CBF_LOGIN_URL)
+        tab = web.current_window_handle
+    else:
+        wm.change_to_tab(tab)
+        return
 
     time.sleep(2)
 
@@ -39,14 +43,13 @@ def log_in():
     element = web.find_element(By.XPATH, config.LOGIN_BUTTON_XPATH)
     element.click()
 
-    try:
-        WebDriverWait(web, 60).until(lambda x: x.find_element(By.ID, config.CHECK_LOGGED_ID))
-    except TimeoutException:
-        print('COULD NOT LOG IN')
+    wm.wait_for_element(config.CHECK_LOGGED_ID, 60)
 
 
 def register_athlete():
     # REGISTERING ATHLETE PERSONAL DATA
+    wm.change_to_tab(tab)
+
     if web.current_url != config.NEW_ATHLETE_URL:
         web.get(config.NEW_ATHLETE_URL)
         time.sleep(2)
@@ -106,6 +109,8 @@ def register_athlete():
 
 
 def update_athlete():
+    wm.change_to_tab(tab)
+
     search_athlete()
 
     wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
@@ -159,6 +164,8 @@ def set_athlete_guardian():
         print('O atleta é maior de idade.')
         return
 
+    wm.change_to_tab(tab)
+
     search_athlete()
 
     wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
@@ -176,6 +183,8 @@ def set_athlete_guardian():
 
 
 def generate_ticket():
+    wm.change_to_tab(tab)
+
     search_athlete()
 
     wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
@@ -195,6 +204,8 @@ def generate_ticket():
 
 
 def generate_contract():
+    wm.change_to_tab(tab)
+
     if web.current_url != config.ATHLETE_CONTRACT_URL:
         search_athlete()
 

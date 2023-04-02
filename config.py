@@ -82,7 +82,7 @@ CONTRACT_EXAM_DATE_FIELD = '//*[@id="dataAtestadoAmador"]'
 CONTRACT_SAVE_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[3]/div[3]/div/button'
 
 # IDs
-CHECK_LOGGED_ID = 'btn-busca-global-atleta'
+CHECK_LOGGED_ID = '/html/body/div[3]/div[2]/div[1]/ul/li'
 
 # URLs
 NEW_ATHLETE_URL = 'https://gestaoweb.cbf.com.br/site/registro/atleta/adicionar/'

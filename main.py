@@ -86,7 +86,6 @@ def start_ui():
     docs_paths = data[config.DATA_DOCS_KEY]
 
     configs = [
-        [sg.VStretch()],
         [
             sg.Push(),
             sg.Text(text='Formulário:', size=10),
@@ -139,7 +138,11 @@ def start_ui():
                 ]
             ),
         ],
-        [sg.VStretch()]
+        [
+            sg.Push(),
+            sg.Button('Atualizar Dados', key='-UPDATE_DATA-' ,pad=10),
+            sg.Push()
+        ]
     ]
 
     athlete_info_column = [
@@ -148,7 +151,10 @@ def start_ui():
             sg.Combo(values=names, key='-GET_ATHLETE_DATA-', enable_events=True, expand_x=True)
         ],
         [
-            sg.Text(text=f'NOME:', size=5),
+            sg.HSeparator(pad=((30, 30), (30, 15)))
+        ],
+        [
+            sg.Text(text=f'NOME:', size=7),
             sg.InputText(
                 key='-ATHLETE_NAME-',
                 use_readonly_for_disable=True,
@@ -157,7 +163,7 @@ def start_ui():
                 border_width=0)
         ],
         [
-            sg.Text(text=f'CPF:', size=5),
+            sg.Text(text=f'CPF:', size=7),
             sg.InputText(
                 key='-ATHLETE_CPF-',
                 use_readonly_for_disable=True,
@@ -166,7 +172,16 @@ def start_ui():
                 border_width=0)
         ],
         [
-            sg.Text(text=f'EMAIL:', size=5),
+            sg.Text(text=f'NASCIM.:', size=7),
+            sg.InputText(
+                key='-ATHLETE_BIRTHDAY-',
+                use_readonly_for_disable=True,
+                disabled=True,
+                disabled_readonly_background_color='#64778d',
+                border_width=0)
+        ],
+        [
+            sg.Text(text=f'EMAIL:', size=7),
             sg.InputText(
                 key='-ATHLETE_EMAIL-',
                 use_readonly_for_disable=True,
@@ -175,42 +190,42 @@ def start_ui():
                 border_width=0)
         ],
         [
+            sg.VStretch(),
             sg.Push(),
             sg.Image(key='-ATHLETE_PHOTO-', size=(50, 50,)),
-            sg.Push()
+            sg.Push(),
+            sg.VStretch()
         ]
     ]
 
     cbf_command_list = [
-        [sg.Button(button_text='CBF', key='-CBF-', enable_events=True)],
-        [sg.Button(button_text='FPF', key='-FPF-', enable_events=True)],
-        [sg.Button(button_text='FPF Registrar', key='-FPF_REGISTER-', enable_events=True)],
-        [sg.Button(button_text='FPF Documentos', key='-FPF_DOCS-', enable_events=True)],
-        [sg.Button(button_text='FPF Contrato', key='-FPF_CONTRACT-', enable_events=True)],
-        [sg.Button(button_text='FPF Formulário', key='-FPF_FORM-', enable_events=True)],
-        [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
-        [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
-        [sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True)],
-        [sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True)],
-        [sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True)]
+        [sg.Push(), sg.Text('CBF', font='bold'), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Login', key='-CBF-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True, size=20), sg.Push()]
     ]
 
     fpf_command_list = [
-        [sg.Button(button_text='FPF', key='-FPF-', enable_events=True)],
-        [sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True)],
-        [sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True)],
-        [sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True)],
-        [sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True)],
-        [sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True)]
+        [sg.Push(), sg.Text('FBF', font='bold'), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Login', key='-FPF-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Registrar', key='-FPF_REGISTER-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Documentos', key='-FPF_DOCS-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Contrato', key='-FPF_CONTRACT-', enable_events=True, size=20), sg.Push()],
+        [sg.Push(), sg.Button(button_text='Formulário', key='-FPF_FORM-', enable_events=True, size=20), sg.Push()]
     ]
+
+    commands = cbf_command_list + [[sg.HSeparator(pad=10)]] + fpf_command_list
 
     layout = [
         [
             sg.TabGroup([
                 [
                     sg.Tab('Atletas',
-                           [[sg.Column(athlete_info_column), sg.VSeparator(), sg.Column(cbf_command_list)]]),
-                    sg.Tab('Configurações', configs)
+                           [[sg.Column(athlete_info_column, vertical_alignment='top', pad=10), sg.VSeparator(), sg.Column(commands, pad=10)]]),
+                    sg.Tab('Configurações', [[sg.Column(configs, pad=15)]])
                 ]
             ], tab_background_color='#516173')
         ]
@@ -229,18 +244,24 @@ def manage_event(event_name: str, values: dict):
         window['-ATHLETE_NAME-'].update(current_athlete.name)
         window['-ATHLETE_CPF-'].update(current_athlete.cpf)
         window['-ATHLETE_EMAIL-'].update(current_athlete.email)
+        window['-ATHLETE_BIRTHDAY-'].update(current_athlete.birthday)
         if os.path.isfile(current_athlete.doc_photo + '.png'):
             png = Image.open(current_athlete.doc_photo + '.png')
             png = png.convert('RGB')
             png.save(current_athlete.doc_photo + '.jpg')
             os.remove(current_athlete.doc_photo + '.png')
         img = Image.open(current_athlete.doc_photo + '.jpg')
-        img.thumbnail((200, 200), Image.LANCZOS)
+        img.thumbnail((250, 250), Image.LANCZOS)
         window['-ATHLETE_PHOTO-'].update(data=ImageTk.PhotoImage(img))
         return
 
     if event_name == '-MENU-':
         window.layout()
+
+        return
+
+    if event_name == '-UPDATE_DATA-':
+        get_athlete_data()
 
         return
 
@@ -255,10 +276,10 @@ def manage_event(event_name: str, values: dict):
     if event_name == '-UPDATE_ATHLETE-':
         if current_athlete is None:
             return
-        # try:
-        cbf.update_athlete()
-        # except:
-        #     return
+        try:
+            cbf.update_athlete()
+        except:
+            return
 
     if event_name == '-UPDATE_GUARDIAN-':
         if current_athlete is None:
@@ -285,52 +306,72 @@ def manage_event(event_name: str, values: dict):
             return
 
     if event_name == '-FORM_PATH-':
-        data[config.DATA_FORMS_KEY] = values['-FORM_PATH-']
-        save_data()
-        get_athlete_data()
-        return
+        try:
+            data[config.DATA_FORMS_KEY] = values['-FORM_PATH-']
+            save_data()
+            get_athlete_data()
+        except:
+            return
 
     if event_name == '-DOCS_PATH-':
-        data[config.DATA_DOCS_KEY] = values['-DOCS_PATH-']
-        save_data()
-        get_athlete_data()
-        return
+        try:
+            data[config.DATA_DOCS_KEY] = values['-DOCS_PATH-']
+            save_data()
+            get_athlete_data()
+        except:
+            return
 
     if event_name == '-LOGIN_CBF-':
-        data[config.DATA_LOGIN_CBF_KEY] = values['-LOGIN_CBF-']
-        save_data()
-        return
+        try:
+            data[config.DATA_LOGIN_CBF_KEY] = values['-LOGIN_CBF-']
+            save_data()
+        except:
+            return
 
     if event_name == '-PASSWORD_CBF-':
-        data[config.DATA_PASSWORD_CBF_KEY] = values['-PASSWORD_CBF-']
-        save_data()
-        return
+        try:
+            data[config.DATA_PASSWORD_CBF_KEY] = values['-PASSWORD_CBF-']
+            save_data()
+        except:
+            return
 
     if event_name == '-LOGIN_FPF-':
-        data[config.DATA_LOGIN_FPF_KEY] = values['-LOGIN_FPF-']
-        save_data()
-        return
+        try:
+            data[config.DATA_LOGIN_FPF_KEY] = values['-LOGIN_FPF-']
+            save_data()
+        except:
+            return
 
     if event_name == '-PASSWORD_FPF-':
-        data[config.DATA_PASSWORD_FPF_KEY] = values['-PASSWORD_FPF-']
-        save_data()
-        return
+        try:
+            data[config.DATA_PASSWORD_FPF_KEY] = values['-PASSWORD_FPF-']
+            save_data()
+        except:
+            return
 
     if event_name == '-FPF_REGISTER-':
-        fpf.register_athlete()
-        return
+        try:
+            fpf.register_athlete()
+        except:
+            return
 
     if event_name == '-FPF_DOCS-':
-        fpf.add_docs()
-        return
+        try:
+            fpf.add_docs()
+        except:
+            return
 
     if event_name == '-FPF_CONTRACT-':
-        fpf.generate_contract()
-        return
+        try:
+            fpf.generate_contract()
+        except:
+            return
 
     if event_name == '-FPF_FORM-':
-        fpf.generate_form()
-        return
+        try:
+            fpf.generate_form()
+        except:
+            return
 
     if event_name == '-CBF-':
         try:
@@ -340,11 +381,11 @@ def manage_event(event_name: str, values: dict):
             return
 
     if event_name == '-FPF-':
-        # try:
-        start_web()
-        fpf.log_in()
-        # except:
-        return
+        try:
+            start_web()
+            fpf.log_in()
+        except:
+            return
 
 
 def fill_field(xpath, info):
@@ -474,6 +515,8 @@ def get_athlete_data():
     athletes_data = data_frame.to_dict(orient='records')
 
     global names
+    names.clear()
+    athletes.clear()
     for row in athletes_data:
         new_athlete = Athlete(row, data)
         athletes.append(new_athlete)

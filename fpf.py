@@ -1,24 +1,10 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from subprocess import CREATE_NO_WINDOW
-from unidecode import unidecode
-from PIL import Image, ImageTk
+from selenium.webdriver.common.keys import Keys
 from athlete import Athlete
-
 import docs
-import PySimpleGUI as sg
 import web_methods as wm
-import unicodedata
-import pyautogui
 import config
-import json
-import pandas as pd
 import time
 import os
 
@@ -49,7 +35,14 @@ def log_in():
     wm.wait_for_element(config.FPF_HOMEPAGE, 10)
     wm.click_button(config.FPF_AUTH_DROPDOWN)
     wm.click_button(config.FPF_AUTH_REGISTER)
+    time.sleep(0.2)
+    tab = wm.get_next_tab(tab)
     wm.change_to_tab(tab)
+    # close_tab = ActionChains(web)
+    # close_tab.key_down(Keys.CONTROL).send_keys('W').key_up(Keys.CONTROL).perform()
+    # time.sleep(0.2)
+
+
     # new_tab = web.current_window_handle
     # wm.change_to_tab(tab)
     # web.refresh()
@@ -60,6 +53,10 @@ def log_in():
 
 
 def register_athlete():
+    if current_athlete is None:
+        return
+    wm.change_to_tab(tab)
+
     # Type CPF
     web.get(config.FPF_NEW_ATHLETE_URL)
     wm.click_button(config.FPF_NEW_ATHLETE_BUTTON)
@@ -104,6 +101,10 @@ def register_athlete():
 
 
 def add_docs():
+    if current_athlete is None:
+        return
+    wm.change_to_tab(tab)
+
     # Go to profile
     web.get(config.FPF_NEW_ATHLETE_URL)
     wm.fill_field(config.FPF_SEARCH_CPF_INPUT_FIELD, current_athlete.cpf)  # current_athlete.cpf)
@@ -160,6 +161,10 @@ def add_docs():
 
 
 def generate_contract():
+    if current_athlete is None:
+        return
+    wm.change_to_tab(tab)
+
     web.get(config.FPF_ATHLETE_REGISTER_URL)
     wm.fill_field(config.FPF_CONTRACT_CPF_INPUT_FIELD, current_athlete.cpf)  # current_athlete.cpf)
     wm.click_button(config.FPF_CONTRACT_CPF_SEARCH_BUTTON)
@@ -175,6 +180,10 @@ def generate_contract():
 
 
 def generate_form():
+    if current_athlete is None:
+        return
+    wm.change_to_tab(tab)
+
     wm.fill_field(config.FPF_DOCTOR_NAME_INPUT_FIELD, 'Geraldo Fornari Junior')
     wm.fill_field(config.FPF_DOCTOR_CRM_INPUT_FIELD, '44121')
     wm.fill_field(config.FPF_DOCTOR_CPF_INPUT_FIELD, '28613503691')

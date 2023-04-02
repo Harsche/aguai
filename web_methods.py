@@ -95,9 +95,17 @@ def wait_for_element(xpath, max_time):
         print('COULD NOT FIND ELEMENT IN TIME')
 
 
-
 def change_to_tab(tab):
     for tab_handle in web.window_handles:
         if tab_handle == tab:
             web.switch_to.window(tab_handle)
             break
+
+
+def get_next_tab(tab):
+    found = False
+    for tab_handle in web.window_handles:
+        if found:
+            return tab_handle
+        if tab_handle == tab:
+            found = True
