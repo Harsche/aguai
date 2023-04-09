@@ -2,14 +2,9 @@ import os.path
 import docs
 from docs import DocTypes
 from PIL import Image, ImageTk
-from pdf2image import convert_from_path
-from PyPDF2 import PdfReader, PdfWriter
-from reportlab.pdfgen import canvas
-import PyPDF2
 import io
 import os
 import shutil
-import pdfminify
 import pdf_compressor
 
 
@@ -121,7 +116,7 @@ def compress_pdf(path, max_size_kb):
     max_size_bytes = max_size_kb * 1024
     if os.path.getsize(path) < max_size_bytes:
         return
-    copy_path = path.replace('_', '@');
+    copy_path = path.replace('_', '@')
     shutil.copy(path, copy_path)
     pdf_compressor.compress(copy_path, path, 4)
     os.remove(copy_path)
