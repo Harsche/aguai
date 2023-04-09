@@ -1,3 +1,4 @@
+from __future__ import print_function
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
@@ -16,6 +17,7 @@ from athlete import Athlete
 import docs
 import PySimpleGUI as sg
 import unicodedata
+import subprocess
 import pyautogui
 import config
 import json
@@ -75,6 +77,7 @@ def get_data():
 
     cbf.data = data
     fpf.data = data
+
 
 def save_data():
     with open('data.json', 'w') as dt:
@@ -140,7 +143,7 @@ def start_ui():
         ],
         [
             sg.Push(),
-            sg.Button('Atualizar Dados', key='-UPDATE_DATA-' ,pad=10),
+            sg.Button('Atualizar Dados', key='-UPDATE_DATA-', pad=10),
             sg.Push()
         ]
     ]
@@ -202,10 +205,15 @@ def start_ui():
         [sg.Push(), sg.Text('CBF', font='bold'), sg.Push()],
         [sg.Push(), sg.Button(button_text='Login', key='-CBF-', enable_events=True, size=20), sg.Push()],
         [sg.Push(), sg.Button(button_text='Registrar', key='-REGISTER-', enable_events=True, size=20), sg.Push()],
-        [sg.Push(), sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True, size=20), sg.Push()],
-        [sg.Push(), sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True, size=20), sg.Push()],
-        [sg.Push(), sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True, size=20), sg.Push()],
-        [sg.Push(), sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True, size=20), sg.Push()]
+        [sg.Push(), sg.Button(button_text='Atualizar documentos', key='-UPDATE_ATHLETE-', enable_events=True, size=20),
+         sg.Push()],
+        [sg.Push(),
+         sg.Button(button_text='Atualizar responsável', key='-UPDATE_GUARDIAN-', enable_events=True, size=20),
+         sg.Push()],
+        [sg.Push(), sg.Button(button_text='Gerar boleto', key='-GENERATE_TICKET-', enable_events=True, size=20),
+         sg.Push()],
+        [sg.Push(), sg.Button(button_text='Gerar contrato', key='-GENERATE_CONTRACT-', enable_events=True, size=20),
+         sg.Push()]
     ]
 
     fpf_command_list = [
@@ -224,7 +232,8 @@ def start_ui():
             sg.TabGroup([
                 [
                     sg.Tab('Atletas',
-                           [[sg.Column(athlete_info_column, vertical_alignment='top', pad=10), sg.VSeparator(), sg.Column(commands, pad=10)]]),
+                           [[sg.Column(athlete_info_column, vertical_alignment='top', pad=10), sg.VSeparator(),
+                             sg.Column(commands, pad=10)]]),
                     sg.Tab('Configurações', [[sg.Column(configs, pad=15)]])
                 ]
             ], tab_background_color='#516173')
@@ -245,12 +254,8 @@ def manage_event(event_name: str, values: dict):
         window['-ATHLETE_CPF-'].update(current_athlete.cpf)
         window['-ATHLETE_EMAIL-'].update(current_athlete.email)
         window['-ATHLETE_BIRTHDAY-'].update(current_athlete.birthday)
-        if os.path.isfile(current_athlete.doc_photo + '.png'):
-            png = Image.open(current_athlete.doc_photo + '.png')
-            png = png.convert('RGB')
-            png.save(current_athlete.doc_photo + '.jpg')
-            os.remove(current_athlete.doc_photo + '.png')
-        img = Image.open(current_athlete.doc_photo + '.jpg')
+        current_athlete.compress_files()
+        img = Image.open(current_athlete.doc_photo)
         img.thumbnail((250, 250), Image.LANCZOS)
         window['-ATHLETE_PHOTO-'].update(data=ImageTk.PhotoImage(img))
         return
@@ -479,30 +484,6 @@ def most_similar_string(strings, word):
 
     # Return the best match
     return best_match
-
-
-def select_dropdown_option(xpath, option_name):
-    try:
-        dropdown = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND DROPDOWN')
-    else:
-        select = Select(dropdown)
-        options_list = []
-        for option in select.options:
-            options_list.append(option.text)
-        best_match = most_similar_string(options_list, option_name)
-        select.select_by_visible_text(best_match)
-
-
-def select_dropdown_option_by_index(xpath, index):
-    try:
-        dropdown = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND DROPDOWN')
-    else:
-        select = Select(dropdown)
-        select.select_by_index(index)
 
 
 def get_athlete_data():

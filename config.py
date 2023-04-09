@@ -76,7 +76,7 @@ CONTRACT_NEXT_1_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2
 CONTRACT_NEXT_2_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/ul/li[3]/a'
 CONTRACT_DOCTOR_DROPDOWN = '//*[@id="idPessoaMedicoAmador"]'
 CONTRACT_EXAM_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[2]/div[3]/div[1]/ul/li/label/input'
-CONTRACT_EXAM2_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[2]/div[3]/div[2]/ul/li[2]/label/input'
+CONTRACT_EXAM2_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[2]/div[3]/div[2]/ul/li[4]/label/input'
 CONTRACT_EXAM3_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[2]/div[3]/div[2]/ul/li[3]/label/input'
 CONTRACT_EXAM_DATE_FIELD = '//*[@id="dataAtestadoAmador"]'
 CONTRACT_SAVE_BUTTON = '/html/body/div[3]/div[2]/div[2]/div/form/div[12]/div[2]/div/div[3]/div[3]/div/button'

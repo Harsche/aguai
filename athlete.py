@@ -1,6 +1,16 @@
 import os.path
 import docs
 from docs import DocTypes
+from PIL import Image, ImageTk
+from pdf2image import convert_from_path
+from PyPDF2 import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
+import PyPDF2
+import io
+import os
+import shutil
+import pdfminify
+import pdf_compressor
 
 
 class Athlete:
@@ -13,7 +23,7 @@ class Athlete:
         self.isMinor = athlete_dict['Menor de idade'] == 'Sim'
         self.gender: str = athlete_dict['Sexo biológico']
         self.cpf: str = str(athlete_dict['CPF']).strip().zfill(11)
-        self.rg: str = str(athlete_dict['RG.1']) .strip()
+        self.rg: str = str(athlete_dict['RG.1']).strip()
         self.email: str = athlete_dict['Email'].strip()
         self.civilState: str = athlete_dict['Estado civil']
         self.scholarship: str = athlete_dict['Grau de instrução ']
@@ -27,7 +37,7 @@ class Athlete:
         self.doc_photo = docs.get_doc_path(DocTypes.Photo, self, data)
         self.doc_rg = docs.get_doc_path(DocTypes.RG, self, data)
         self.doc_cpf = docs.get_doc_path(DocTypes.CPF, self, data)
-        if not os.path.isfile(self.doc_cpf):
+        if not self.doc_cpf or not os.path.isfile(self.doc_cpf):
             self.doc_cpf = self.doc_rg
         self.doc_scholarship = docs.get_doc_path(DocTypes.Scholarship, self, data)
         self.doc_birthCertificate = docs.get_doc_path(DocTypes.Birthday_Certificate, self, data)
@@ -62,3 +72,56 @@ class Athlete:
         if doc_type == DocTypes.Medical_Exam:
             return self.doc_medicalExam
         return None
+
+    def compress_files(self):
+        # Convert png to jpg
+        files = [self.doc_photo, self.doc_rg, self.doc_cpf, self.doc_scholarship, self.doc_guardianCpf,
+                 self.doc_residenceCertificate_, self.doc_militaryService, self.doc_medicalExam,
+                 self.doc_birthCertificate]
+
+        for i in range(len(files)):
+            path = files[i]
+            if path and '.png' in path and os.path.isfile(path):
+                png = Image.open(path)
+                png = png.convert('RGB')
+                new_path = path.replace('.png', '.jpg')
+                png.save(new_path)
+                os.remove(path)
+                files[i] = new_path
+
+            # Compress images
+        for i in range(len(files)):
+            path = files[i]
+            if not path:
+                continue
+            if '.jpg' in path:
+                compress_image(path, 500)
+                continue
+            if '.pdf' in path:
+                compress_pdf(path, 500)
+
+
+def compress_image(file_path, max_size_kb):
+    max_size_bytes = max_size_kb * 1024
+    # Open the image file
+    img = Image.open(file_path)
+    # Check if the file is larger than 500kB
+    if os.path.getsize(file_path) > max_size_bytes:
+        # Calculate the new width and height to keep the same aspect ratio
+        ratio = float(os.path.getsize(file_path)) / max_size_bytes
+        new_width = int(img.width / ratio)
+        new_height = int(img.height / ratio)
+        # Resize the image
+        img = img.resize((new_width, new_height), Image.ANTIALIAS)
+        # Save the compressed image and overwrite the original file
+        img.save(file_path, optimize=True, quality=85)
+
+
+def compress_pdf(path, max_size_kb):
+    max_size_bytes = max_size_kb * 1024
+    if os.path.getsize(path) < max_size_bytes:
+        return
+    copy_path = path.replace('_', '@');
+    shutil.copy(path, copy_path)
+    pdf_compressor.compress(copy_path, path, 4)
+    os.remove(copy_path)

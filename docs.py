@@ -44,6 +44,7 @@ docs_suffix = {
 def get_doc_path(doc_type, athlete, data):
     path = data[config.DATA_DOCS_KEY]
     path += f'/{docs_subfolder[doc_type]}/{athlete.cpf}_{docs_suffix[doc_type]}'
+    path = get_doc_extension(path)
     return path
 
 

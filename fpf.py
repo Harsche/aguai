@@ -42,7 +42,6 @@ def log_in():
     # close_tab.key_down(Keys.CONTROL).send_keys('W').key_up(Keys.CONTROL).perform()
     # time.sleep(0.2)
 
-
     # new_tab = web.current_window_handle
     # wm.change_to_tab(tab)
     # web.refresh()
@@ -114,49 +113,41 @@ def add_docs():
     wm.click_button(config.FPF_UPDATE_ATHLETE_DOCS_BUTTON)
 
     # Add documents
-    path = docs.get_doc_extension(current_athlete.doc_photo)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_PHOTO_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_photo):
+        wm.send_file_to_field(config.FPF_PHOTO_INPUT_FILE, current_athlete.doc_photo)
         wm.click_button(config.FPF_PHOTO_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_rg)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_RG_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_rg):
+        wm.send_file_to_field(config.FPF_RG_INPUT_FILE, current_athlete.doc_rg)
         wm.click_button(config.FPF_RG_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_cpf)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_CPF_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_cpf):
+        wm.send_file_to_field(config.FPF_CPF_INPUT_FILE, current_athlete.doc_cpf)
         wm.click_button(config.FPF_CPF_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_guardianCpf)
-    if current_athlete.isMinor and os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_GUARDIAN_DOC_INPUT_FILE, path)
+    if current_athlete.isMinor and os.path.isfile(current_athlete.doc_guardianCpf):
+        wm.send_file_to_field(config.FPF_GUARDIAN_DOC_INPUT_FILE, current_athlete.doc_guardianCpf)
         wm.click_button(config.FPF_GUARDIAN_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_medicalExam)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_HEALTH_EXAM_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_medicalExam):
+        wm.send_file_to_field(config.FPF_HEALTH_EXAM_INPUT_FILE, current_athlete.doc_medicalExam)
         wm.click_button(config.FPF_HEALTH_EXAM_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_birthCertificate)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_BIRTH_CERT_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_birthCertificate):
+        wm.send_file_to_field(config.FPF_BIRTH_CERT_INPUT_FILE, current_athlete.doc_birthCertificate)
         wm.click_button(config.FPF_BIRTH_CERT_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_militaryService)
-    if not current_athlete.isMinor and os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_MILITARY_SERV_INPUT_FILE, path)
+    if not current_athlete.isMinor and current_athlete.doc_militaryService and os.path.isfile(
+            current_athlete.doc_militaryService):
+        wm.send_file_to_field(config.FPF_MILITARY_SERV_INPUT_FILE, current_athlete.doc_militaryService)
         wm.click_button(config.FPF_MILITARY_SERV_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_scholarship)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_SCHOLARSHIP_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_scholarship):
+        wm.send_file_to_field(config.FPF_SCHOLARSHIP_INPUT_FILE, current_athlete.doc_scholarship)
         wm.click_button(config.FPF_SCHOLARSHIP_SEND_BUTTON)
 
-    path = docs.get_doc_extension(current_athlete.doc_residenceCertificate_)
-    if os.path.isfile(path):
-        wm.send_file_to_field(config.FPF_ADDRESS_INPUT_FILE, path)
+    if os.path.isfile(current_athlete.doc_residenceCertificate_):
+        wm.send_file_to_field(config.FPF_ADDRESS_INPUT_FILE, current_athlete.doc_residenceCertificate_)
         wm.click_button(config.FPF_ADDRESS_SEND_BUTTON)
 
 

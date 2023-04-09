@@ -125,17 +125,16 @@ def update_athlete():
         doc_name = wm.get_text(config.EDIT_SELECT_DOC_TYPE_XPATH.replace('index', str(i)))
         doc_type = docs.get_doc_type(doc_name)
         wm.click_button(config.EDIT_SELECT_DOC_BUTTON_XPATH.replace('index', str(i)))
-        doc_name = docs.get_doc_extension(current_athlete.get_doc_path(doc_type))
-        if not os.path.isfile(doc_name):
-            print(f'File is missing: {doc_name}')
-            return
-        file_elem = web.find_elements(By.XPATH, config.EDIT_SET_FILE_FIELD_XPATH)[1]
-        file_elem.send_keys(doc_name.replace('/', r'\\'))
+        doc_name = current_athlete.get_doc_path(doc_type)
+        if doc_name and os.path.isfile(doc_name):
+            file_elem = web.find_elements(By.XPATH, config.EDIT_SET_FILE_FIELD_XPATH)[1]
+            file_elem.send_keys(doc_name.replace('/', r'\\'))
         wm.click_button(config.EDIT_SEND_FILE_BUTTON_XPATH)
         time.sleep(1)
 
     for i in range(2):
         wm.click_button(config.EDIT_NEXT_BUTTON_XPATH)
+        time.sleep(0.2)
 
     wm.clear_fill_field(config.ADDRESS_STREET_FIELD_XPATH, current_athlete.addressStreet)
     wm.clear_fill_field(config.ADDRESS_NEIGHBOURHOOD_FIELD_XPATH, current_athlete.addressNeighbourhood)
@@ -144,6 +143,7 @@ def update_athlete():
 
     for i in range(2):
         wm.click_button(config.EDIT_NEXT_BUTTON_XPATH)
+        time.sleep(0.2)
 
     # FILLING ANTHROPOMETRY
     wm.select_dropdown_option_by_index(config.SHIRT_DROPDOWN, 1)
@@ -177,7 +177,7 @@ def set_athlete_guardian():
     wm.click_button(config.GUARDIAN_CPF_SEARCH_BUTTON)
     wm.fill_field(config.GUARDIAN_IS_PARENT_DROPDOWN, 'Sim')
     wm.fill_field(config.GUARDIAN_ACTIVE_DROPDOWN, 'Sim')
-    wm.send_file_to_field(config.GUARDIAN_DOC_FILE_FIELD, docs.get_doc_extension(current_athlete.doc_guardianCpf))
+    wm.send_file_to_field(config.GUARDIAN_DOC_FILE_FIELD, current_athlete.doc_guardianCpf)
     time.sleep(1)
     wm.click_button(config.GUARDIAN_SAVE_BUTTON)
 
@@ -208,10 +208,9 @@ def generate_contract():
 
     if web.current_url != config.ATHLETE_CONTRACT_URL:
         search_athlete()
-
-    wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
-    wm.click_button(config.EDIT_CONTRACT_BUTTON_XPATH)
-    time.sleep(2)
+        wm.click_button(config.ACTIONS_ATHLETE_BUTTON_XPATH)
+        wm.click_button(config.EDIT_CONTRACT_BUTTON_XPATH)
+        time.sleep(2)
 
     # GENERATING CONTRACT
     wm.click_button(config.CONTRACT_NEW_BUTTON)
