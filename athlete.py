@@ -101,16 +101,23 @@ def compress_image(file_path, max_size_kb):
     max_size_bytes = max_size_kb * 1024
     # Open the image file
     img = Image.open(file_path)
+    quality = img.info.get('quality', 100)
     # Check if the file is larger than 500kB
-    if os.path.getsize(file_path) > max_size_bytes:
-        # Calculate the new width and height to keep the same aspect ratio
-        ratio = float(os.path.getsize(file_path)) / max_size_bytes
-        new_width = int(img.width / ratio)
-        new_height = int(img.height / ratio)
-        # Resize the image
-        img = img.resize((new_width, new_height), Image.ANTIALIAS)
-        # Save the compressed image and overwrite the original file
-        img.save(file_path, optimize=True, quality=85)
+    while True:
+        # Reduce the JPEG quality by 10%
+        quality -= 10
+        img.save(file_path, 'JPEG', quality=quality, optimize=True, progressive=True)
+
+        # Check the resulting file size
+        file_size = os.path.getsize(file_path)
+
+        # If the file size is less than the target size, break the loop
+        if file_size <= max_size_bytes:
+            break
+
+        # If the quality falls below 30, stop compressing
+        if quality <= 30:
+            break
 
 
 def compress_pdf(path, max_size_kb):
