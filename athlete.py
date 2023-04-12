@@ -76,10 +76,11 @@ class Athlete:
 
         for i in range(len(files)):
             path = files[i]
-            if path and '.png' in path and os.path.isfile(path):
+            if path and ('.png' in path or '.webp' in path) and os.path.isfile(path):
                 png = Image.open(path)
                 png = png.convert('RGB')
                 new_path = path.replace('.png', '.jpg')
+                new_path = new_path.replace('.webp', '.jpg')
                 png.save(new_path)
                 os.remove(path)
                 files[i] = new_path

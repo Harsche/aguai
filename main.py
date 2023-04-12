@@ -491,6 +491,8 @@ def get_athlete_data():
         return
     if data[config.DATA_DOCS_KEY] == '':
         return
+    if not os.path.isfile(data[config.DATA_FORMS_KEY]):
+        return
 
     data_frame = pd.read_csv(data[config.DATA_FORMS_KEY], sep=',', header=0, dtype=str)
     athletes_data = data_frame.to_dict(orient='records')

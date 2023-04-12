@@ -81,3 +81,6 @@ def get_doc_extension(path):
     png_path = path + '.png'
     if os.path.isfile(png_path):
         return png_path
+    webp_path = path + '.webp'
+    if os.path.isfile(webp_path):
+        return webp_path
