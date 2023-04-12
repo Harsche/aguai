@@ -126,5 +126,5 @@ def compress_pdf(path, max_size_kb):
         return
     copy_path = path.replace('_', '@')
     shutil.copy(path, copy_path)
-    pdf_compressor.compress(copy_path, path, 4)
+    pdf_compressor.compress(copy_path, path, 0)
     os.remove(copy_path)
