@@ -51,7 +51,7 @@ def start_web():
 
     options = Options()
     # options.set_preference('profile', config.FIREFOX_PROFILE_PATH)
-    service = Service(config.GECKODRIVER_PATH)
+    service = Service(f'"{data[config.DATA_GECKODRIVER_KEY]}"')
     service.creation_flags = CREATE_NO_WINDOW
     web = webdriver.Chrome(service=service, options=options)
     cbf.web = web
@@ -65,6 +65,7 @@ def get_data():
         data = {
             'formPath': '',
             'docsPath': '',
+            'geckodriverPath': '',
             'loginCBF': '',
             'passwordCBF': '',
             'loginFPF': '',
@@ -85,8 +86,9 @@ def save_data():
 
 
 def start_ui():
-    form_paths = data[config.DATA_FORMS_KEY]
-    docs_paths = data[config.DATA_DOCS_KEY]
+    form_paths = data.get(config.DATA_FORMS_KEY)
+    docs_paths = data.get(config.DATA_DOCS_KEY)
+    geckodriver_paths = data.get(config.DATA_GECKODRIVER_KEY)
 
     configs = [
         [
@@ -101,6 +103,13 @@ def start_ui():
             sg.Text(text='Documentos:', size=10),
             sg.Input(enable_events=True, key='-DOCS_PATH-', default_text=docs_paths),
             sg.FolderBrowse('Procurar...'),
+            sg.Push()
+        ],
+        [
+            sg.Push(),
+            sg.Text(text='Geckodriver:', size=10),
+            sg.Input(enable_events=True, key='-GECKODRIVER_PATH-', default_text=geckodriver_paths),
+            sg.FileBrowse('Procurar...', file_types=(('EXE', '.exe'),)),
             sg.Push()
         ],
         [
@@ -318,6 +327,13 @@ def manage_event(event_name: str, values: dict):
         except:
             return
 
+    if event_name == '-GECKODRIVER_PATH-':
+        try:
+            data[config.DATA_GECKODRIVER_KEY] = values['-GECKODRIVER_PATH-']
+            save_data()
+        except:
+            return
+
     if event_name == '-DOCS_PATH-':
         try:
             data[config.DATA_DOCS_KEY] = values['-DOCS_PATH-']
@@ -379,73 +395,18 @@ def manage_event(event_name: str, values: dict):
             return
 
     if event_name == '-CBF-':
-        try:
-            start_web()
-            cbf.log_in()
-        except:
-            return
+        # try:
+        start_web()
+        cbf.log_in()
+        # except:
+        #     return
 
     if event_name == '-FPF-':
-        try:
-            start_web()
-            fpf.log_in()
-        except:
-            return
-
-
-def fill_field(xpath, info):
-    try:
-        field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND FIELD')
-    else:
-        field.click()
-        field.send_keys(info)
-
-
-def clear_fill_field(xpath, info):
-    try:
-        field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND FIELD')
-    else:
-        field.click()
-        field.clear()
-        field.send_keys(info)
-
-
-def get_text(xpath):
-    try:
-        text = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND TEXT')
-    else:
-        return text.text
-
-
-def send_file_field_execute_script_on_id(element_id, file):
-    try:
-        web.execute_script(f"document.getElementById('{element_id}').value = '{file}'")
-    except TimeoutException:
-        print('COULD NOT UPLOAD FILE')
-
-
-def send_file_to_field(xpath, file):
-    try:
-        field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND ELEMENT')
-    else:
-        field.send_keys(file.replace('/', r'\\'))
-
-
-def click_button(xpath):
-    try:
-        button = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
-    except TimeoutException:
-        print('COULD NOT FIND FIELD')
-    else:
-        button.click()
+        # try:
+        start_web()
+        fpf.log_in()
+        # except:
+        #     return
 
 
 def set_current_athlete(name: str):

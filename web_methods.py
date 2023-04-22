@@ -40,7 +40,8 @@ def get_text(xpath):
 
 def send_file_field_execute_script_on_id(element_id, file):
     try:
-        web.execute_script(f"document.getElementById('{element_id}').value = '{file}'")
+        file_path = file.replace('/', r'\\')
+        web.execute_script(f"document.getElementById('{element_id}').value = '{file_path}'")
     except TimeoutException:
         print('COULD NOT UPLOAD FILE')
 
@@ -48,6 +49,15 @@ def send_file_field_execute_script_on_id(element_id, file):
 def send_file_to_field(xpath, file):
     try:
         field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, xpath))
+    except TimeoutException:
+        print('COULD NOT FIND ELEMENT')
+    else:
+        field.send_keys(file.replace('/', r'\\'))
+
+
+def send_file_to_field_id(element_id, file):
+    try:
+        field = WebDriverWait(web, 10).until(lambda x: x.find_element(By.ID, element_id))
     except TimeoutException:
         print('COULD NOT FIND ELEMENT')
     else:

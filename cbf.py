@@ -5,7 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains
 from subprocess import CREATE_NO_WINDOW
+from PIL import Image
 from unidecode import unidecode
 import web_methods as wm
 from athlete import Athlete
@@ -117,6 +119,22 @@ def update_athlete():
     wm.click_button(config.EDIT_ATHLETE_BUTTON_XPATH)
     time.sleep(2)
 
+    # UPDATE PHOTO
+
+    # wm.click_button(config.PHOTO_BUTTON_XPATH)
+    # time.sleep(1)
+    # send_photo = web.find_element(By.XPATH, config.PHOTO_FILE_FIELD_ID)
+    # send_photo.send_keys(current_athlete.doc_photo.replace('/', r'\\'))
+    # wm.send_file_field_execute_script_on_id(config.PHOTO_FILE_FIELD_ID, current_athlete.doc_photo)
+    # crop = ActionChains(web)
+    # handle = WebDriverWait(web, 10).until(lambda x: x.find_element(By.XPATH, config.PHOTO_HANDLE_XPATH))
+    # crop.move_to_element(handle)
+    # photo = Image.open(current_athlete.doc_photo)
+    # width, height = photo.size
+    # crop.click_and_hold().move_by_offset(width, height).release().perform()
+    # wm.click_button(config.PHOTO_SAVE_BUTTON_XPATH)
+    # time.sleep(0.5)
+
     total_docs = 6 if current_athlete.isMinor else 7
 
     # EDITING ATHLETE FILES
@@ -193,14 +211,15 @@ def generate_ticket():
 
     # GENERATING TICKET
     wm.click_button(config.CONTRACT_TICKET_BUTTON)
-    time.sleep(1)
+    time.sleep(2)
     wm.select_dropdown_option_by_index(config.CONTRACT_TICKET_TYPE_DROPDOWN, 1)
     wm.click_button(config.CONTRACT_FINALIZE_BUTTON)
 
+    time.sleep(2)
     pyautogui.press('enter')
-    time.sleep(0.5)
+    time.sleep(1)
     pyautogui.press('enter')
-    time.sleep(0.5)
+    time.sleep(1)
 
 
 def generate_contract():
@@ -214,11 +233,12 @@ def generate_contract():
 
     # GENERATING CONTRACT
     wm.click_button(config.CONTRACT_NEW_BUTTON)
-    time.sleep(1)
+    time.sleep(2)
     wm.fill_field(config.CONTRACT_DAYS_FIELD, '730')
     wm.fill_field(config.CONTRACT_START_DATE_FIELD, '26/03/2023')
     wm.click_button(config.CONTRACT_NEXT_1_BUTTON)
 
+    time.sleep(1)
     wm.select_dropdown_option_by_index(config.CONTRACT_DOCTOR_DROPDOWN, 1)
     wm.click_button(config.CONTRACT_EXAM_BUTTON)
     wm.click_button(config.CONTRACT_EXAM2_BUTTON)

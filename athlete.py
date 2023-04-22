@@ -85,7 +85,9 @@ class Athlete:
                 os.remove(path)
                 files[i] = new_path
 
-            # Compress images
+        self.update_docs_paths(files)
+
+        # Compress images
         for i in range(len(files)):
             path = files[i]
             if not path:
@@ -95,6 +97,17 @@ class Athlete:
                 continue
             if '.pdf' in path:
                 compress_pdf(path, 500)
+
+    def update_docs_paths(self, files_list: [str]):
+        self.doc_photo = files_list[0]
+        self.doc_rg = files_list[1]
+        self.doc_cpf = files_list[2]
+        self.doc_scholarship = files_list[3]
+        self.doc_guardianCpf = files_list[4]
+        self.doc_residenceCertificate_ = files_list[5]
+        self.doc_militaryService = files_list[6]
+        self.doc_medicalExam = files_list[7]
+        self.doc_birthCertificate = files_list[8]
 
 
 def compress_image(file_path, max_size_kb):
@@ -113,10 +126,6 @@ def compress_image(file_path, max_size_kb):
 
         # If the file size is less than the target size, break the loop
         if file_size <= max_size_bytes:
-            break
-
-        # If the quality falls below 30, stop compressing
-        if quality <= 30:
             break
 
 

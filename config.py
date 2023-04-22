@@ -11,6 +11,10 @@ LOGIN_PASSWORD_XPATH = '/html/body/table/tbody/tr/td/form/table/tbody/tr/td[3]/d
 LOGIN_BUTTON_XPATH = '/html/body/table/tbody/tr/td/form/table/tbody/tr/td[3]/div/input[3]'
 
 # Registration Xpaths
+PHOTO_BUTTON_XPATH = '/html/body/div[3]/div[2]/div[2]/div[1]/form/div/div[5]/div/div[2]/div[2]/div[1]/div[1]/div/div/div/div[3]/button[1]'
+PHOTO_FILE_FIELD_ID = 'files'
+PHOTO_HANDLE_XPATH = '/html/body/div/div/div[1]/div[2]/div[11]'
+PHOTO_SAVE_BUTTON_XPATH = '/html/body/form/div[2]/button'
 CPF_FIELD_XPATH = '//*[@id="cpf"]'
 NAME_FIELD_XPATH = '//*[@id="atletaNomeCompleto"]'
 NICKNAME_FIELD_XPATH = '//*[@id="apelido"]'
@@ -187,6 +191,7 @@ FPF_GENERATE_FORM_BUTTON = '//*[@id="btGerarForm"]'
 
 # DATA
 DATA_FORMS_KEY = 'formPath'
+DATA_GECKODRIVER_KEY = 'geckodriverPath'
 DATA_DOCS_KEY = 'docsPath'
 DATA_LOGIN_CBF_KEY = 'loginCBF'
 DATA_PASSWORD_CBF_KEY = 'passwordCBF'
