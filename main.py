@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from subprocess import CREATE_NO_WINDOW
+from datetime import datetime
 from unidecode import unidecode
 from PIL import Image, ImageTk
 

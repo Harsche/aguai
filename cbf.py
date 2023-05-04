@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from subprocess import CREATE_NO_WINDOW
 from PIL import Image
 from unidecode import unidecode
+from datetime import datetime, timedelta
 import web_methods as wm
 from athlete import Athlete
 
@@ -234,8 +235,9 @@ def generate_contract():
     # GENERATING CONTRACT
     wm.click_button(config.CONTRACT_NEW_BUTTON)
     time.sleep(2)
-    wm.fill_field(config.CONTRACT_DAYS_FIELD, '730')
-    wm.fill_field(config.CONTRACT_START_DATE_FIELD, '26/03/2023')
+    wm.clear_fill_field(config.CONTRACT_DAYS_FIELD, '730')
+    date = datetime.today().strftime('%d/%m/%Y')
+    wm.fill_field(config.CONTRACT_START_DATE_FIELD, date)
     wm.click_button(config.CONTRACT_NEXT_1_BUTTON)
 
     time.sleep(1)
@@ -243,7 +245,9 @@ def generate_contract():
     wm.click_button(config.CONTRACT_EXAM_BUTTON)
     wm.click_button(config.CONTRACT_EXAM2_BUTTON)
     wm.click_button(config.CONTRACT_EXAM3_BUTTON)
-    wm.fill_field(config.CONTRACT_EXAM_DATE_FIELD, '25/03/2023')
+    yesterday = datetime.today() - timedelta(days=1)
+    yesterday = yesterday.strftime('%d/%m/%Y')
+    wm.clear_fill_field(config.CONTRACT_EXAM_DATE_FIELD, yesterday)
     wm.click_button(config.CONTRACT_NEXT_2_BUTTON)
     wm.click_button(config.CONTRACT_SAVE_BUTTON)
 
