@@ -1,4 +1,3 @@
-from __future__ import print_function
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
@@ -8,7 +7,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from subprocess import CREATE_NO_WINDOW
-from datetime import datetime
 from unidecode import unidecode
 from PIL import Image, ImageTk
 
@@ -22,7 +20,7 @@ import subprocess
 import pyautogui
 import config
 import json
-import pandas as pd
+import pandas2 as pd
 import time
 import fpf
 import cbf
@@ -52,9 +50,11 @@ def start_web():
 
     options = Options()
     # options.set_preference('profile', config.FIREFOX_PROFILE_PATH)
-    service = Service(f'"{data[config.DATA_GECKODRIVER_KEY]}"')
+    print(data[config.DATA_GECKODRIVER_KEY])
+    driver_path = data[config.DATA_GECKODRIVER_KEY]
+    service = Service(f'{driver_path}')
     service.creation_flags = CREATE_NO_WINDOW
-    web = webdriver.Chrome(service=service, options=options)
+    web = webdriver.Firefox(service=service, options=options)
     cbf.web = web
     fpf.web = web
     web_methods.web = web
@@ -456,8 +456,7 @@ def get_athlete_data():
     if not os.path.isfile(data[config.DATA_FORMS_KEY]):
         return
 
-    data_frame = pd.read_csv(data[config.DATA_FORMS_KEY], sep=',', header=0, dtype=str)
-    athletes_data = data_frame.to_dict(orient='records')
+    athletes_data = pd.read_csv(data[config.DATA_FORMS_KEY])
 
     global names
     names.clear()
@@ -471,7 +470,6 @@ def get_athlete_data():
 
     if window:
         window['-GET_ATHLETE_DATA-'].update(values=names)
-
 
 if __name__ == '__main__':
     setup()
