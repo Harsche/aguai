@@ -10,8 +10,8 @@ import os
 
 web: WebDriver
 current_athlete: Athlete
-tab: str = ''
 data: dict
+tab: str = ''
 
 
 def log_in():

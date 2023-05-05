@@ -12,6 +12,7 @@ from PIL import Image, ImageTk
 
 import web_methods
 from athlete import Athlete
+from docs import DocTypes
 
 import docs
 import PySimpleGUI as sg
@@ -79,6 +80,7 @@ def get_data():
 
     cbf.data = data
     fpf.data = data
+    docs.data = data
 
 
 def save_data():
@@ -235,6 +237,17 @@ def start_ui():
         [sg.Push(), sg.Button(button_text='Formulário', key='-FPF_FORM-', enable_events=True, size=20), sg.Push()]
     ]
 
+    docs_check = [
+        [sg.Canvas(key='-DOC_CPF-', background_color='#FF0000', size=(10, 10)), sg.Text('CPF', font='bold')],
+        [sg.Canvas(key='-DOC_RG-', background_color='#FF0000', size=(10, 10)), sg.Text('RG', font='bold')],
+        [sg.Canvas(key='-DOC_FOTO-', background_color='#FF0000', size=(10, 10)), sg.Text('FOTO', font='bold')],
+        [sg.Canvas(key='-DOC_Certidão de Nascimento-', background_color='#FF0000', size=(10, 10)), sg.Text('Certidão de Nascimento', font='bold')],
+        [sg.Canvas(key='-DOC_Comprovante Residência-', background_color='#FF0000', size=(10, 10)), sg.Text('Comprovante Residência', font='bold')],
+        [sg.Canvas(key='-DOC_Atestado Médico-', background_color='#FF0000', size=(10, 10)), sg.Text('Atestado Médico', font='bold')],
+        [sg.Canvas(key='-DOC_Comprovante de Escolaridade-', background_color='#FF0000', size=(10, 10)), sg.Text('Comprovante de Escolaridade', font='bold')],
+        [sg.Canvas(key='-DOC_Certificado de Reservista-', background_color='#FF0000', size=(10, 10)), sg.Text('Certificado de Reservista', font='bold')]
+    ]
+
     commands = cbf_command_list + [[sg.HSeparator(pad=10)]] + fpf_command_list
 
     layout = [
@@ -244,6 +257,7 @@ def start_ui():
                     sg.Tab('Atletas',
                            [[sg.Column(athlete_info_column, vertical_alignment='top', pad=10), sg.VSeparator(),
                              sg.Column(commands, pad=10)]]),
+                    sg.Tab('Documentos', [[sg.Column(docs_check)]]),
                     sg.Tab('Configurações', [[sg.Column(configs, pad=15)]])
                 ]
             ], tab_background_color='#516173')
@@ -264,6 +278,14 @@ def manage_event(event_name: str, values: dict):
         window['-ATHLETE_CPF-'].update(current_athlete.cpf)
         window['-ATHLETE_EMAIL-'].update(current_athlete.email)
         window['-ATHLETE_BIRTHDAY-'].update(current_athlete.birthday)
+        window['-DOC_CPF-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.CPF, current_athlete) else '#FF0000')
+        window['-DOC_RG-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.RG, current_athlete) else '#FF0000')
+        window['-DOC_FOTO-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Photo, current_athlete) else '#FF0000')
+        window['-DOC_Certidão de Nascimento-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Birthday_Certificate, current_athlete) else '#FF0000')
+        window['-DOC_Comprovante Residência-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Residence_Certificate, current_athlete) else '#FF0000')
+        window['-DOC_Comprovante de Escolaridade-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Scholarship, current_athlete) else '#FF0000')
+        window['-DOC_Certificado de Reservista-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Military_Service, current_athlete) else '#FF0000')
+        window['-DOC_Atestado Médico-'].update(background_color='#00FF00' if docs.is_doc_file(DocTypes.Medical_Exam, current_athlete) else '#FF0000')
         current_athlete.compress_files()
         img = Image.open(current_athlete.doc_photo)
         img.thumbnail((250, 250), Image.LANCZOS)
