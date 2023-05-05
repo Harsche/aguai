@@ -28,17 +28,17 @@ class Athlete:
         self.guardianName: str = athlete_dict['Nome completo do responsável']
         self.guardianPhone: str = athlete_dict['Telefone de contato do responsável']
         self.guardianCpf: str = athlete_dict['CPF.1']
-        self.doc_guardianCpf = docs.get_doc_path(DocTypes.Guardian_CPF, self, data)
-        self.doc_photo = docs.get_doc_path(DocTypes.Photo, self, data)
-        self.doc_rg = docs.get_doc_path(DocTypes.RG, self, data)
-        self.doc_cpf = docs.get_doc_path(DocTypes.CPF, self, data)
+        self.doc_guardianCpf = docs.get_doc_path(DocTypes.Guardian_CPF, self)
+        self.doc_photo = docs.get_doc_path(DocTypes.Photo, self)
+        self.doc_rg = docs.get_doc_path(DocTypes.RG, self)
+        self.doc_cpf = docs.get_doc_path(DocTypes.CPF, self)
         if not self.doc_cpf or not os.path.isfile(self.doc_cpf):
             self.doc_cpf = self.doc_rg
-        self.doc_scholarship = docs.get_doc_path(DocTypes.Scholarship, self, data)
-        self.doc_birthCertificate = docs.get_doc_path(DocTypes.Birthday_Certificate, self, data)
-        self.doc_residenceCertificate_ = docs.get_doc_path(DocTypes.Residence_Certificate, self, data)
-        self.doc_militaryService = docs.get_doc_path(DocTypes.Military_Service, self, data)
-        self.doc_medicalExam = docs.get_doc_path(DocTypes.Medical_Exam, self, data)
+        self.doc_scholarship = docs.get_doc_path(DocTypes.Scholarship, self)
+        self.doc_birthCertificate = docs.get_doc_path(DocTypes.Birthday_Certificate, self)
+        self.doc_residenceCertificate_ = docs.get_doc_path(DocTypes.Residence_Certificate, self)
+        self.doc_militaryService = docs.get_doc_path(DocTypes.Military_Service, self)
+        self.doc_medicalExam = docs.get_doc_path(DocTypes.Medical_Exam, self)
         self.cep: str = athlete_dict['CEP']
         self.addressStreet: str = athlete_dict['Nome da rua']
         self.addressNum: str = athlete_dict['Número']

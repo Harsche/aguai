@@ -3,6 +3,8 @@ import os
 
 import config
 
+data: dict
+
 
 class DocTypes(Enum):
     CPF = 1
@@ -41,7 +43,7 @@ docs_suffix = {
 }
 
 
-def get_doc_path(doc_type, athlete, data):
+def get_doc_path(doc_type, athlete):
     path = data[config.DATA_DOCS_KEY]
     path += f'/{docs_subfolder[doc_type]}/{athlete.cpf}_{docs_suffix[doc_type]}'
     path = get_doc_extension(path)
@@ -65,7 +67,14 @@ def get_doc_type(doc_requested):
         return DocTypes.Military_Service
     if doc_requested == 'Atestado Médico':
         return DocTypes.Medical_Exam
-    return None
+    return
+
+
+def is_doc_file(doc_type, athlete):
+    path = get_doc_path(doc_type, athlete)
+    if not path:
+        return False
+    return os.path.isfile(path)
 
 
 def get_doc_extension(path):
